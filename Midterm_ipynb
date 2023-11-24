@@ -1,0 +1,787 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/bobrossiotta/Artificial_Intelligence_Midterm/blob/main/Midterm_ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "99544247",
+      "metadata": {
+        "id": "99544247"
+      },
+      "source": [
+        "# Yapay Zeka'ya Giriş - Midterm"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "c051543e",
+      "metadata": {
+        "id": "c051543e"
+      },
+      "source": [
+        "## Bilgi"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "2b16643e",
+      "metadata": {
+        "id": "2b16643e"
+      },
+      "source": [
+        "1. Ödev dokümanın adi \"Midterm_Isim_Varsaikinciisim_Soyisim.ipynb\" formatında olmalıdır.\n",
+        "2. Örneğin öğrencinin adı Mustafa Kadir Halıcı ise dokümanı \"Midterm_Mustafa_Kadir_Halici.ipynb\" olarak yüklemelidir.\n",
+        "3. Öğrencilerin amacı aşağıda verilen 10 fonksiyon/sınıf kod bloklarını verilen önerge ve örneklere göre doldurmaktır.\n",
+        "4. Aşağıdaki sorularda eğer fonksiyona yanlış/istenmeyen bir girdi değeri veriliyor ise \"raise GirdiHatasi\" çıktısı verilmelidir. Quiz C"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "8765a80c",
+      "metadata": {
+        "id": "8765a80c"
+      },
+      "source": [
+        "## Yükleme"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "bf63914b",
+      "metadata": {
+        "id": "bf63914b"
+      },
+      "outputs": [],
+      "source": [
+        "import numpy\n",
+        "import pandas"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "398217cb",
+      "metadata": {
+        "id": "398217cb"
+      },
+      "source": [
+        "### Error Handling"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "3fb7ee83",
+      "metadata": {
+        "id": "3fb7ee83"
+      },
+      "outputs": [],
+      "source": [
+        "# Öğrenciler bu kısmı değiştirmeyecektir.\n",
+        "class GirdiHatasi(Exception):\n",
+        "    pass"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "0896223c",
+      "metadata": {
+        "id": "0896223c"
+      },
+      "source": [
+        "### Soru 1"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "25b05638",
+      "metadata": {
+        "id": "25b05638"
+      },
+      "outputs": [],
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "class GirdiHatasi(Exception):\n",
+        "    pass\n",
+        "\n",
+        "def dosya_oku(dosyayolu: str) -> pd.DataFrame:\n",
+        "  try:\n",
+        "    if not dosyayolu.lower().endswith(('.csv', '.tab')):\n",
+        "      raise GirdiHatasi(\"Geçersiz dosya uzantısı. Dosya uzantısı .csv veya .tab olmalıdır.\")\n",
+        "\n",
+        "    if dosyayolu.lower().endswith('.csv'):\n",
+        "      sonuc = pd.read_csv(dosyayolu)\n",
+        "    elif dosyayolu.lower().endswith('.tab'):\n",
+        "      sonuc = pd.read_csv(dosyayolu, delimiter='\\t')\n",
+        "    else:\n",
+        "      raise GirdiHatasi(\"Beklenmeyen bir hata oluştu.\")\n",
+        "\n",
+        "    return sonuc\n",
+        "\n",
+        "    except GirdiHatasi as e:\n",
+        "      raise e\n",
+        "\n",
+        "try:\n",
+        "    dosyayolu_csv = 'ornek.csv'\n",
+        "    dataframe_csv = dosya_oku(dosyayolu_csv)\n",
+        "    print(f\"{dosyayolu_csv} dosyasının DataFrame hali:\")\n",
+        "    print(dataframe_csv)\n",
+        "\n",
+        "    dosyayolu_tab = 'ornek.tab'\n",
+        "    dataframe_tab = dosya_oku(dosyayolu_tab)\n",
+        "    print(f\"\\n{dosyayolu_tab} dosyasının DataFrame hali:\")\n",
+        "    print(dataframe_tab)\n",
+        "\n",
+        "except GirdiHatasi as e:\n",
+        "    print(f\"Hata: {e}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "ac141999",
+      "metadata": {
+        "id": "ac141999"
+      },
+      "source": [
+        "### Soru 2"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "853d752b",
+      "metadata": {
+        "id": "853d752b"
+      },
+      "outputs": [],
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "class GirdiHatasi(Exception):\n",
+        "    pass\n",
+        "\n",
+        "def sikayet_tipi_N(df: pd.DataFrame, N: int) -> list:\n",
+        "  try:\n",
+        "    if not isinstance(df, pd.DataFrame):\n",
+        "      raise GirdiHatasi(\"Geçersiz DataFrame. pandas.DataFrame bekleniyor.\")\n",
+        "\n",
+        "    if not isinstance(N, int) or N <= 0 or N > 165:\n",
+        "      raise GirdiHatasi(\"Geçersiz N değeri. N, 0'dan büyük ve 165'ten küçük olmalıdır.\")\n",
+        "\n",
+        "    if \"Complaint Type\" not in df.columns:\n",
+        "      raise GirdiHatasi(\"DataFrame'de 'Complaint Type' sütunu bulunamadı.\")\n",
+        "\n",
+        "    sikayet_tipleri = df[\"Complaint Type\"].value_counts().index[:N].tolist()\n",
+        "\n",
+        "        return sikayet_tipleri\n",
+        "\n",
+        "  except GirdiHatasi as e:\n",
+        "    raise e\n",
+        "\n",
+        "try:\n",
+        "    dosya_yolu = \"311-service-requests.csv\"\n",
+        "    df = pd.read_csv(dosya_yolu)\n",
+        "    sonuc = sikayet_tipi_N(df, 10)\n",
+        "    print(\"En çok tekrar eden 10 şikayet tipi:\")\n",
+        "    print(sonuc)\n",
+        "\n",
+        "except GirdiHatasi as e:\n",
+        "    print(f\"Hata: {e}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "8f28ec64",
+      "metadata": {
+        "id": "8f28ec64"
+      },
+      "source": [
+        "### Soru 3"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "be613b7b",
+      "metadata": {
+        "id": "be613b7b"
+      },
+      "outputs": [],
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "class GirdiHatasi(Exception):\n",
+        "    pass\n",
+        "\n",
+        "def benzersiz_ajans_sayisi(df: pd.DataFrame) -> int:\n",
+        "  try:\n",
+        "    if not isinstance(df, pd.DataFrame):\n",
+        "      raise GirdiHatasi(\"Geçersiz DataFrame. pandas.DataFrame bekleniyor.\")\n",
+        "\n",
+        "    if \"Agency Name\" not in df.columns:\n",
+        "      raise GirdiHatasi(\"DataFrame'de 'Agency Name' sütunu bulunamadı.\")\n",
+        "\n",
+        "        benzersiz_ajanslar = df[\"Agency Name\"].nunique()\n",
+        "\n",
+        "      return benzersiz_ajanslar\n",
+        "\n",
+        "  except GirdiHatasi as e:\n",
+        "    raise e\n",
+        "\n",
+        "\n",
+        "try:\n",
+        "    dosya_yolu = \"311-service-requests.csv\"\n",
+        "    df = pd.read_csv(dosya_yolu)\n",
+        "    sonuc = benzersiz_ajans_sayisi(df)\n",
+        "    print(\"Benzersiz ajans sayısı:\")\n",
+        "    print(sonuc)\n",
+        "\n",
+        "except GirdiHatasi as e:\n",
+        "    print(f\"Hata: {e}\")\n",
+        "\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "66f025c6",
+      "metadata": {
+        "id": "66f025c6"
+      },
+      "source": [
+        "### Soru 4"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "a9064c5c",
+      "metadata": {
+        "id": "a9064c5c"
+      },
+      "outputs": [],
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "class GirdiHatasi(Exception):\n",
+        "    pass\n",
+        "\n",
+        "def problemli_kentleri_bul(df: pd.DataFrame) -> list:\n",
+        "  try:\n",
+        "    if not isinstance(df, pd.DataFrame):\n",
+        "      raise GirdiHatasi(\"Geçersiz DataFrame. pandas.DataFrame bekleniyor.\")\n",
+        "\n",
+        "    if \"Borough\" not in df.columns or \"Complaint Type\" not in df.columns:\n",
+        "      raise GirdiHatasi(\"DataFrame'de 'Borough' veya 'Complaint Type' sütunu bulunamadı.\")\n",
+        "\n",
+        "        illegal_parking_df = df[df[\"Complaint Type\"] == \"Illegal Parking\"]\n",
+        "\n",
+        "        kent_sikayet_sayilari = illegal_parking_df[\"Borough\"].value_counts().head(5).reset_index().values.tolist()\n",
+        "\n",
+        "      return kent_sikayet_sayilari\n",
+        "\n",
+        "  except GirdiHatasi as e:\n",
+        "    raise e\n",
+        "\n",
+        "try:\n",
+        "    dosya_yolu = \"311-service-requests.csv\"\n",
+        "    df = pd.read_csv(dosya_yolu)\n",
+        "    sonuc = problemli_kentleri_bul(df)\n",
+        "    print(\"En çok illegal park şikayeti alan 5 kent:\")\n",
+        "    print(sonuc)\n",
+        "\n",
+        "except GirdiHatasi as e:\n",
+        "    print(f\"Hata: {e}\")\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "bd057591",
+      "metadata": {
+        "id": "bd057591"
+      },
+      "source": [
+        "### Soru 5"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "dfc9fca1",
+      "metadata": {
+        "id": "dfc9fca1"
+      },
+      "source": [
+        "![my_max_pooling_ornek.png](attachment:my_max_pooling_ornek.png)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "6f1b411c",
+      "metadata": {
+        "id": "6f1b411c"
+      },
+      "outputs": [],
+      "source": [
+        "import numpy as np\n",
+        "\n",
+        "class GirdiHatasi(Exception):\n",
+        "    pass\n",
+        "\n",
+        "def my_max_pooling(matrix: np.array) -> np.array:\n",
+        "  try:\n",
+        "    if not isinstance(matrix, np.ndarray) or matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1] or matrix.shape[0] % 4 != 0:\n",
+        "      raise GirdiHatasi(\"Geçersiz girdi tipi veya boyutu. Numpy array olmalı ve boyutu (N, N) olmalıdır, N 4'ün tam katı olmalıdır.\")\n",
+        "\n",
+        "        N = matrix.shape[0]\n",
+        "    if N % 4 != 0:\n",
+        "      raise GirdiHatasi(\"Geçersiz boyut. N, 4'ün tam katı olmalıdır.\")\n",
+        "\n",
+        "        yeni_N = N // 2\n",
+        "\n",
+        "        yeni_matrix = np.zeros((yeni_N, yeni_N))\n",
+        "\n",
+        "    for i in range(0, N, 2):\n",
+        "      for j in range(0, N, 2):\n",
+        "        yeni_matrix[i // 2, j // 2] = np.max(matrix[i:i+2, j:j+2])\n",
+        "\n",
+        "    return yeni_matrix\n",
+        "\n",
+        "  except GirdiHatasi as e:\n",
+        "    raise e\n",
+        "\n",
+        "try:\n",
+        "    N = 4\n",
+        "    girdi_matrix = np.random.randint(0, 10, size=(N, N))\n",
+        "\n",
+        "    print(\"Önceki Matrix:\")\n",
+        "    print(girdi_matrix)\n",
+        "\n",
+        "    sonuc = my_max_pooling(girdi_matrix)\n",
+        "\n",
+        "    print(\"\\nYeni Matrix:\")\n",
+        "    print(sonuc)\n",
+        "\n",
+        "except GirdiHatasi as e:\n",
+        "    print(f\"Hata: {e}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "437401cf",
+      "metadata": {
+        "id": "437401cf"
+      },
+      "source": [
+        "### Soru 6"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "afb24708",
+      "metadata": {
+        "id": "afb24708"
+      },
+      "outputs": [],
+      "source": [
+        "from datetime import datetime, timedelta\n",
+        "\n",
+        "class GirdiHatasi(Exception):\n",
+        "    pass\n",
+        "\n",
+        "def yilin_bitmesine_kac_gun_kaldi(girdi_tarihi: str) -> int:\n",
+        "  try:\n",
+        "    tarih_objesi = datetime.strptime(girdi_tarihi, \"%Y-%m-%d\")\n",
+        "\n",
+        "    simdiki_tarih = datetime.now()\n",
+        "\n",
+        "    if tarih_objesi <= simdiki_tarih:\n",
+        "      raise GirdiHatasi(\"Geçmiş bir tarih girdiniz. Lütfen gelecek bir tarih giriniz.\")\n",
+        "\n",
+        "      yilin_son_gunu = datetime(simdiki_tarih.year, 12, 31)\n",
+        "\n",
+        "      kalan_gun = (yilin_son_gunu - tarih_objesi).days\n",
+        "\n",
+        "    return kalan_gun\n",
+        "\n",
+        "  except ValueError:\n",
+        "    raise GirdiHatasi(\"Geçersiz tarih formatı. Lütfen 'YYYY-AA-GG' formatında bir tarih giriniz.\")\n",
+        "\n",
+        "def kullanici_yilini_al():\n",
+        "  try:\n",
+        "    yil = int(input(\"Lütfen içinde bulunduğunuz yılı giriniz: \"))\n",
+        "    return yil\n",
+        "\n",
+        "  except ValueError:\n",
+        "    raise GirdiHatasi(\"Geçersiz yıl formatı. Lütfen sayısal bir yıl giriniz.\")\n",
+        "\n",
+        "try:\n",
+        "    yil = kullanici_yilini_al()\n",
+        "\n",
+        "    girdi_tarihi = f\"{yil}-12-31\"\n",
+        "\n",
+        "    sonuc = yilin_bitmesine_kac_gun_kaldi(girdi_tarihi)\n",
+        "\n",
+        "    print(f\"{girdi_tarihi} tarihine kadar kalan gün sayısı: {sonuc}\")\n",
+        "except GirdiHatasi as e:\n",
+        "    print(f\"Hata: {e}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "94166963",
+      "metadata": {
+        "id": "94166963"
+      },
+      "source": [
+        "### Soru 7"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "c14805ef",
+      "metadata": {
+        "id": "c14805ef"
+      },
+      "source": [
+        "![tekrarlari_temizle_ornek.png](attachment:tekrarlari_temizle_ornek.png)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "78ae6ff3",
+      "metadata": {
+        "id": "78ae6ff3"
+      },
+      "outputs": [],
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "class GirdiHatasi(Exception):\n",
+        "    pass\n",
+        "\n",
+        "def tekrarlari_temizle(df: pd.DataFrame) -> pd.DataFrame:\n",
+        "  try:\n",
+        "    if not isinstance(df, pd.DataFrame):\n",
+        "      raise GirdiHatasi(\"Geçersiz girdi tipi. DataFrame bekleniyor.\")\n",
+        "\n",
+        "    if df.empty:\n",
+        "      raise GirdiHatasi(\"DataFrame boş. Geçerli bir DataFrame bekleniyor.\")\n",
+        "\n",
+        "    if df.columns[0] not in df.columns:\n",
+        "      raise GirdiHatasi(\"İlk sütunun adı DataFrame'de bulunmamaktadır.\")\n",
+        "\n",
+        "      zaman_pulu_sutunu = df[df.columns[0]]\n",
+        "\n",
+        "    if not pd.api.types.is_datetime64_any_dtype(zaman_pulu_sutunu):\n",
+        "      raise GirdiHatasi(\"Zaman pulu sütunu datetime tipinde olmalıdır.\")\n",
+        "\n",
+        "      df_temizlenmis = df.sort_values(by=df.columns[0], ascending=False).drop_duplicates(subset=df.columns[0])\n",
+        "\n",
+        "    return df_temizlenmis\n",
+        "\n",
+        "  except GirdiHatasi as e:\n",
+        "    raise e\n",
+        "\n",
+        "try:\n",
+        "    data = {'Zaman Pulu': ['2023-01-01 10:00:00', '2023-01-02 15:30:00', '2023-01-01 10:00:00', '2023-01-03 08:45:00']}\n",
+        "    df = pd.DataFrame(data)\n",
+        "\n",
+        "    print(\"Önceki DataFrame:\")\n",
+        "    print(df)\n",
+        "\n",
+        "    sonuc = tekrarlari_temizle(df)\n",
+        "\n",
+        "    print(\"\\nTemizlenmiş DataFrame:\")\n",
+        "    print(sonuc)\n",
+        "\n",
+        "except GirdiHatasi as e:\n",
+        "    print(f\"Hata: {e}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "01d09d48",
+      "metadata": {
+        "id": "01d09d48"
+      },
+      "source": [
+        "### Soru 8"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "91973dfd",
+      "metadata": {
+        "id": "91973dfd"
+      },
+      "outputs": [],
+      "source": [
+        "import numpy as np\n",
+        "\n",
+        "class GirdiHatasi(Exception):\n",
+        "    pass\n",
+        "\n",
+        "def bosluklari_doldur(veri: np.array, duzenleme_modu: int) -> np.array or bool:\n",
+        "  try:\n",
+        "    if not isinstance(veri, np.ndarray) or veri.ndim != 1 or veri.size == 0:\n",
+        "      raise GirdiHatasi(\"Geçersiz veri tipi veya boyutu. Numpy array olmalı ve boş olmamalı.\")\n",
+        "\n",
+        "    if not np.all((veri >= 0) & (veri <= 100)):\n",
+        "      raise GirdiHatasi(\"Verilerin tamamı 0 ile 100 arasında olmalıdır.\")\n",
+        "\n",
+        "      gecerli_degerler = veri[(veri >= 0) & (veri <= 100)]\n",
+        "\n",
+        "    if len(gecerli_degerler) == 0:\n",
+        "      raise GirdiHatasi(\"Geçerli veri bulunmamaktadır.\")\n",
+        "\n",
+        "    if duzenleme_modu == 0:\n",
+        "      sonuc = np.concatenate(([gecerli_degerler[0]], gecerli_degerler[:-1]))\n",
+        "\n",
+        "    elif duzenleme_modu == 1:\n",
+        "      sonuc = np.convolve(gecerli_degerler, [0.5, 0.5], mode='same')\n",
+        "\n",
+        "    elif duzenleme_modu == 2:\n",
+        "      ort = np.mean(gecerli_degerler)\n",
+        "      sonuc = np.where((veri < 0) | (veri > 100), ort, veri)\n",
+        "\n",
+        "    else:\n",
+        "      raise GirdiHatasi(\"Geçersiz düzenleme modu. 0, 1 veya 2 olmalıdır.\")\n",
+        "\n",
+        "      return sonuc\n",
+        "\n",
+        "  except GirdiHatasi as e:\n",
+        "    raise e\n",
+        "\n",
+        "try:\n",
+        "    veri = np.array([1, 2, 3, 4, 5, 6, -1, 8, 9, 10, 11])\n",
+        "\n",
+        "    duzenleme_modu = 0\n",
+        "    sonuc = bosluklari_doldur(veri, duzenleme_modu)\n",
+        "    print(f\"duzenleme_modu: {duzenleme_modu}, sonuc: {sonuc}\")\n",
+        "\n",
+        "    duzenleme_modu = 1\n",
+        "    sonuc = bosluklari_doldur(veri, duzenleme_modu)\n",
+        "    print(f\"duzenleme_modu: {duzenleme_modu}, sonuc: {sonuc}\")\n",
+        "\n",
+        "    duzenleme_modu = 2\n",
+        "    sonuc = bosluklari_doldur(veri, duzenleme_modu)\n",
+        "    print(f\"duzenleme_modu: {duzenleme_modu}, sonuc: {sonuc}\")\n",
+        "\n",
+        "except GirdiHatasi as e:\n",
+        "    print(f\"Hata: {e}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "aa023e9d",
+      "metadata": {
+        "id": "aa023e9d"
+      },
+      "source": [
+        "### Soru 9"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "496ee75a",
+      "metadata": {
+        "id": "496ee75a"
+      },
+      "outputs": [],
+      "source": [
+        "class GirdiHatasi(Exception):\n",
+        "    pass\n",
+        "\n",
+        "class UnutkanSayac():\n",
+        "    def __init__(self, hafiza_suresi_ms):\n",
+        "      try:\n",
+        "        if not isinstance(hafiza_suresi_ms, int) or hafiza_suresi_ms <= 0:\n",
+        "          raise GirdiHatasi(\"Hafıza süresi pozitif bir tam sayı olmalıdır.\")\n",
+        "\n",
+        "          self.hafiza_suresi_ms = hafiza_suresi_ms\n",
+        "\n",
+        "          self.ping_zamani = []\n",
+        "\n",
+        "      except GirdiHatasi as e:\n",
+        "        raise e\n",
+        "\n",
+        "    def ping(self, yapilan_sorgu_zamani_ms):\n",
+        "      try:\n",
+        "        if not isinstance(yapilan_sorgu_zamani_ms, int) or yapilan_sorgu_zamani_ms <= 0:\n",
+        "          raise GirdiHatasi(\"Sorgu zamanı pozitif bir tam sayı olmalıdır.\")\n",
+        "\n",
+        "          self.ping_zamani.append(yapilan_sorgu_zamani_ms)\n",
+        "\n",
+        "          self.ping_zamani = [t for t in self.ping_zamani if yapilan_sorgu_zamani_ms - t <= self.hafiza_suresi_ms]\n",
+        "\n",
+        "          sonuc = len(self.ping_zamani)\n",
+        "\n",
+        "        return sonuc\n",
+        "\n",
+        "      except GirdiHatasi as e:\n",
+        "        raise e\n",
+        "\n",
+        "try:\n",
+        "    bilgisayar_1 = UnutkanSayac(1000)\n",
+        "\n",
+        "    guncel_sayac_1 = bilgisayar_1.ping(200)\n",
+        "    print(guncel_sayac_1)  # 1\n",
+        "\n",
+        "    guncel_sayac_1 = bilgisayar_1.ping(400)\n",
+        "    print(guncel_sayac_1)  # 2\n",
+        "\n",
+        "    guncel_sayac_1 = bilgisayar_1.ping(500)\n",
+        "    print(guncel_sayac_1)  # 3\n",
+        "\n",
+        "    guncel_sayac_1 = bilgisayar_1.ping(1000)\n",
+        "    print(guncel_sayac_1)  # 4\n",
+        "\n",
+        "    guncel_sayac_1 = bilgisayar_1.ping(1500)\n",
+        "    print(guncel_sayac_1)  # 3\n",
+        "\n",
+        "except GirdiHatasi as e:\n",
+        "    print(f\"Hata: {e}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "ae40b082",
+      "metadata": {
+        "id": "ae40b082"
+      },
+      "source": [
+        "### Soru 10"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "844c7e8c",
+      "metadata": {
+        "id": "844c7e8c"
+      },
+      "outputs": [],
+      "source": [
+        "import math\n",
+        "import random\n",
+        "\n",
+        "class GirdiHatasi(Exception):\n",
+        "    pass\n",
+        "\n",
+        "class Karakter:\n",
+        "    def __init__(self, baslangic_koordinati: tuple):\n",
+        "        if not isinstance(baslangic_koordinati, tuple) or len(baslangic_koordinati) != 2 or not all(isinstance(x, int) for x in baslangic_koordinati):\n",
+        "            raise GirdiHatasi(\"Geçersiz başlangıç koordinatları. tuple ve iki integer bekleniyor.\")\n",
+        "        self.anlik_konum = baslangic_koordinati\n",
+        "\n",
+        "    def hareket_et(self, hareket: tuple):\n",
+        "        if not isinstance(hareket, tuple) or len(hareket) != 2 or not all(isinstance(x, int) for x in hareket):\n",
+        "            raise GirdiHatasi(\"Geçersiz hareket. tuple ve iki integer bekleniyor.\")\n",
+        "        self.anlik_konum = tuple(map(lambda x, y: x + y, self.anlik_konum, hareket))\n",
+        "\n",
+        "    def yuru(self, yon: int):\n",
+        "        if not isinstance(yon, int) or yon not in range(4):\n",
+        "            raise GirdiHatasi(\"Geçersiz yön. 0, 1, 2 veya 3 bekleniyor.\")\n",
+        "        hareketler = [(0, 1), (1, 0), (0, -1), (-1, 0)]\n",
+        "        self.hareket_et(hareketler[yon])\n",
+        "\n",
+        "    def zipla(self, yon: int):\n",
+        "        if not isinstance(yon, int) or yon not in range(4):\n",
+        "            raise GirdiHatasi(\"Geçersiz yön. 0, 1, 2 veya 3 bekleniyor.\")\n",
+        "        hareketler = [(0, 2), (2, 0), (0, -2), (-2, 0)]\n",
+        "        self.hareket_et(hareketler[yon])\n",
+        "\n",
+        "class Oyuncu(Karakter):\n",
+        "    def __init__(self, baslangic_koordinati: tuple):\n",
+        "        super().__init__(baslangic_koordinati)\n",
+        "        self.ziplama_hakki = 2\n",
+        "\n",
+        "    def dusmanlari_gor(self, dusman_listesi: list) -> int:\n",
+        "        if not isinstance(dusman_listesi, list) or not all(isinstance(dusman, Dusman) for dusman in dusman_listesi):\n",
+        "            raise GirdiHatasi(\"Geçersiz düşman listesi. Liste ve Dusman sınıfından objeler bekleniyor.\")\n",
+        "        sayac = 0\n",
+        "        for dusman in dusman_listesi:\n",
+        "            mesafe = math.sqrt((dusman.anlik_konum[0] - self.anlik_konum[0]) ** 2 +\n",
+        "                               (dusman.anlik_konum[1] - self.anlik_konum[1]) ** 2)\n",
+        "            if mesafe <= 10:\n",
+        "                sayac += 1\n",
+        "        return sayac\n",
+        "\n",
+        "    def zipla(self, yon: int) -> bool:\n",
+        "        if self.ziplama_hakki > 0:\n",
+        "            super().zipla(yon)\n",
+        "            self.ziplama_hakki -= 1\n",
+        "            return True\n",
+        "        return False\n",
+        "\n",
+        "    def yakalandi_mi(self, dusman_listesi: list) -> bool:\n",
+        "        if not isinstance(dusman_listesi, list) or not all(isinstance(dusman, Dusman) for dusman in dusman_listesi):\n",
+        "            raise GirdiHatasi(\"Geçersiz düşman listesi. Liste ve Dusman sınıfından objeler bekleniyor.\")\n",
+        "        for dusman in dusman_listesi:\n",
+        "            if self.anlik_konum == dusman.anlik_konum:\n",
+        "                return True\n",
+        "        return False\n",
+        "\n",
+        "class Dusman(Karakter):\n",
+        "    def __init__(self, baslangic_koordinati: tuple):\n",
+        "        super().__init__(baslangic_koordinati)\n",
+        "\n",
+        "    def rastgele_hareket_et(self):\n",
+        "        hareket = random.choice([(0, 1), (1, 0), (0, -1), (-1, 0)])\n",
+        "        self.hareket_et(hareket)\n",
+        "\n",
+        "    def oyuncuyu_gor(self, oyuncu: Oyuncu) -> bool:\n",
+        "        mesafe = math.sqrt((oyuncu.anlik_konum[0] - self.anlik_konum[0]) ** 2 +\n",
+        "                           (oyuncu.anlik_konum[1] - self.anlik_konum[1]) ** 2)\n",
+        "        return mesafe <= 5\n",
+        "\n",
+        "    def yapay_zeka_hareket(self, oyuncu):\n",
+        "        if self.oyuncuyu_gor(oyuncu):\n",
+        "            hareket_yonu = random.choice([0, 1, 2, 3])\n",
+        "            self.yuru(hareket_yonu)\n",
+        "        else:\n",
+        "            self.rastgele_hareket_et()"
+      ]
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3 (ipykernel)",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3",
+      "version": "3.9.7"
+    },
+    "colab": {
+      "provenance": [],
+      "toc_visible": true,
+      "include_colab_link": true
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
